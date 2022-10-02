@@ -15,7 +15,12 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "GET") {
-    const data = await fetch("https://dummyjson.com/todos");
-    res.status(200).json(await data.json());
+    const result = await fetch("https://dummyjson.com/todos");
+    const data = await result.json();
+    const todos = data?.todos;
+
+    if (todos) {
+      res.status(200).json(todos);
+    }
   }
 }

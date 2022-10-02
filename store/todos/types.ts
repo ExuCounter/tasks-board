@@ -1,6 +1,6 @@
 export type TodoType = {
   id: string;
-  name: string;
+  todo: string;
 };
 
 export type State = TodoType[];

@@ -51,8 +51,21 @@ const Root: NextPage = () => {
   const dispatch = useAppDispatch();
   const todos = useAppSelector(selectTodos);
 
+  const fetchTodos = async () => {
+    const res = await fetch("/api/todos");
+    const todos = await res.json();
+
+    if (todos) {
+      dispatch({
+        type: "todos/bulkAdd",
+        payload: todos,
+      });
+    }
+  };
+
   return (
     <div className="px-8 text-xl">
+      <button onClick={() => fetchTodos()}>fetch todos</button>
       <DragDropContext
         onDragEnd={(result) => {
           if (result.destination) {
@@ -81,7 +94,7 @@ const Root: NextPage = () => {
                         {...provided.dragHandleProps}
                         className="flex justify-between"
                       >
-                        <div>{todo.name}</div>
+                        <div>{todo.todo}</div>
                         <button
                           onClick={() =>
                             dispatch({
