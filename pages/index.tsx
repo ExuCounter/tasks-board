@@ -5,12 +5,12 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Formik, Form, Field } from "formik";
 
 type InitialValues = {
-  name: string;
+  todo: string;
 };
 
 const CreateForm = () => {
   const initialValues: InitialValues = {
-    name: "",
+    todo: "",
   };
   const dispatch = useAppDispatch();
 
@@ -19,24 +19,26 @@ const CreateForm = () => {
       initialValues={initialValues}
       validate={(values) => {
         const errors = {} as any;
-        if (values.name.length === 0) errors.name = "name is empty";
+        if (values.todo.length === 0) errors.todo = "name is empty";
         return errors;
       }}
       onSubmit={(values) => {
-        dispatch({ type: "todos/add", payload: { name: values.name } });
+        dispatch({ type: "todos/add", payload: { todo: values.todo } });
       }}
     >
       {({ errors, touched }) => {
         return (
           <Form>
-            <Field
-              name="name"
-              placeholder="name"
-              className="rounded border py-1 px-3"
-            />
-            {errors.name && touched.name ? (
-              <div style={{ color: "red" }}>{errors.name}</div>
-            ) : null}
+            <div className="flex flex-col">
+              <Field
+                name="todo"
+                placeholder="todo"
+                className="rounded border py-1 px-3"
+              />
+              {errors.todo && touched.todo ? (
+                <div style={{ color: "red" }}>{errors.todo}</div>
+              ) : null}
+            </div>
             <button type="submit" className="border py-1 px-3 rounded">
               add
             </button>
@@ -65,7 +67,16 @@ const Root: NextPage = () => {
 
   return (
     <div className="px-8 text-xl">
-      <button onClick={() => fetchTodos()}>fetch todos</button>
+      <button onClick={() => fetchTodos()} className="border">
+        fetch todos
+      </button>
+      <button
+        className="border"
+        onClick={() => dispatch({ type: "todos/removeAll" })}
+      >
+        Remove all
+      </button>
+
       <DragDropContext
         onDragEnd={(result) => {
           if (result.destination) {

@@ -11,13 +11,14 @@ export const todosSlice = createSlice({
   initialState,
   reducers: {
     add: (state, action: PayloadAction<{ todo: string }>) => [
-      ...state,
       { todo: action.payload.todo, id: uuidv4() },
+      ...state,
     ],
     bulkAdd: (state, action: PayloadAction<{ todo: string }[]>) => [
-      ...state,
       ...action.payload.map((todo) => ({ ...todo, id: uuidv4() })),
+      ...state,
     ],
+    removeAll: () => [],
     remove: (state, action: PayloadAction<{ id: string }>) =>
       state.filter((todo) => todo.id !== action.payload.id),
     dragEnd: (state, action: PayloadAction<{ id: string; index: number }>) => {
