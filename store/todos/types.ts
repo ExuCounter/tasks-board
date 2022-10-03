@@ -3,4 +3,10 @@ export type TodoType = {
   todo: string;
 };
 
-export type State = TodoType[];
+type ColumnType = TodoType[];
+
+export type State = {
+  completed: ColumnType;
+  awaiting: ColumnType;
+  [column: string]: ColumnType;
+};

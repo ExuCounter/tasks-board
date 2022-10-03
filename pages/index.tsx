@@ -32,10 +32,12 @@ const CreateForm = () => {
       {() => {
         return (
           <Form>
-            <div className="flex flex-col">
-              <Input name="todo" placeholder="todo" />
+            <div className="flex">
+              <div className="flex flex-col mr-5">
+                <Input name="todo" placeholder="todo" />
+              </div>
+              <Button>add</Button>
             </div>
-            <Button>add</Button>
           </Form>
         );
       }}
@@ -61,11 +63,15 @@ const Root: NextPage = () => {
 
   return (
     <div className="px-8 text-xl">
-      <Button onClick={() => fetchTodos()}>fetch todos</Button>
-      <Button onClick={() => dispatch({ type: "todos/removeAll" })}>
-        Remove all
-      </Button>
-
+      <div className="my-4">
+        <Button onClick={() => fetchTodos()} className="mr-5">
+          fetch todos
+        </Button>
+        <Button onClick={() => dispatch({ type: "todos/removeAll" })}>
+          Remove all
+        </Button>
+      </div>
+      <CreateForm />
       <DragDropContext
         onDragEnd={(result) => {
           if (result.destination) {
@@ -73,46 +79,57 @@ const Root: NextPage = () => {
               type: "todos/dragEnd",
               payload: {
                 id: result.draggableId,
-                index: result.destination.index,
+                destination: result.destination,
+                source: result.source,
               },
             });
           }
         }}
       >
-        <CreateForm />
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
-              {todos.map((todo, idx) => (
-                <Draggable draggableId={todo.id} key={todo.id} index={idx}>
-                  {(provided) => {
-                    return (
-                      <div
+        <div className="flex">
+          {Object.keys(todos).map((column, idx) => (
+            <div className="flex flex-col" key={idx}>
+              <div className="bg-gray-100 py-4 px-4">{column}</div>
+              <Droppable droppableId={column}>
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {todos[column].map((todo, idx) => (
+                      <Draggable
+                        draggableId={todo.id}
                         key={todo.id}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="flex justify-between"
+                        index={idx}
                       >
-                        <div>{todo.todo}</div>
-                        <Button
-                          onClick={() =>
-                            dispatch({
-                              type: "todos/remove",
-                              payload: { id: todo.id },
-                            })
-                          }
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    );
-                  }}
-                </Draggable>
-              ))}
+                        {(provided) => {
+                          return (
+                            <div
+                              key={todo.id}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className="flex justify-between items-center mb-4 bg-white"
+                            >
+                              <div className="px-3">{todo.todo}</div>
+                              <Button
+                                onClick={() =>
+                                  dispatch({
+                                    type: "todos/remove",
+                                    payload: { id: todo.id },
+                                  })
+                                }
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          );
+                        }}
+                      </Draggable>
+                    ))}
+                  </div>
+                )}
+              </Droppable>
             </div>
-          )}
-        </Droppable>
+          ))}
+        </div>
       </DragDropContext>
     </div>
   );
