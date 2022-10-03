@@ -2,18 +2,20 @@ import type { NextPage } from "next";
 import { useAppDispatch, useAppSelector } from "store/index";
 import { selectTodos } from "store/todos/slice";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import { Button } from "components/ui-kit/index";
+import { Input } from "components/form/Input";
 
 type InitialValues = {
   todo: string;
 };
 
 const CreateForm = () => {
+  const dispatch = useAppDispatch();
+
   const initialValues: InitialValues = {
     todo: "",
   };
-  const dispatch = useAppDispatch();
 
   return (
     <Formik
@@ -27,18 +29,11 @@ const CreateForm = () => {
         dispatch({ type: "todos/add", payload: { todo: values.todo } });
       }}
     >
-      {({ errors, touched }) => {
+      {() => {
         return (
           <Form>
             <div className="flex flex-col">
-              <Field
-                name="todo"
-                placeholder="todo"
-                className="rounded border py-1 px-3"
-              />
-              {errors.todo && touched.todo ? (
-                <div style={{ color: "red" }}>{errors.todo}</div>
-              ) : null}
+              <Input name="todo" placeholder="todo" />
             </div>
             <Button>add</Button>
           </Form>
@@ -100,7 +95,7 @@ const Root: NextPage = () => {
                         className="flex justify-between"
                       >
                         <div>{todo.todo}</div>
-                        <button
+                        <Button
                           onClick={() =>
                             dispatch({
                               type: "todos/remove",
@@ -109,7 +104,7 @@ const Root: NextPage = () => {
                           }
                         >
                           Remove
-                        </button>
+                        </Button>
                       </div>
                     );
                   }}
