@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "store/index";
 import { selectTodos } from "store/todos/slice";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Formik, Form, Field } from "formik";
+import { Button } from "components/ui-kit/index";
 
 type InitialValues = {
   todo: string;
@@ -39,9 +40,7 @@ const CreateForm = () => {
                 <div style={{ color: "red" }}>{errors.todo}</div>
               ) : null}
             </div>
-            <button type="submit" className="border py-1 px-3 rounded">
-              add
-            </button>
+            <Button>add</Button>
           </Form>
         );
       }}
@@ -67,15 +66,10 @@ const Root: NextPage = () => {
 
   return (
     <div className="px-8 text-xl">
-      <button onClick={() => fetchTodos()} className="border">
-        fetch todos
-      </button>
-      <button
-        className="border"
-        onClick={() => dispatch({ type: "todos/removeAll" })}
-      >
+      <Button onClick={() => fetchTodos()}>fetch todos</Button>
+      <Button onClick={() => dispatch({ type: "todos/removeAll" })}>
         Remove all
-      </button>
+      </Button>
 
       <DragDropContext
         onDragEnd={(result) => {
