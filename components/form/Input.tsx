@@ -11,11 +11,11 @@ export const Input = ({
   const [field, meta] = useField(name);
 
   return (
-    <>
+    <div className="mb-3">
       <InputComponent {...field} {...props} />
       {meta.touched && meta.error ? (
-        <div style={{ color: "red" }}>{meta.error}</div>
+        <div className="text-red-500 text-sm mt-1">{meta.error}</div>
       ) : null}
-    </>
+    </div>
   );
 };

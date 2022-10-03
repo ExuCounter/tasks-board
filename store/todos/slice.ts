@@ -9,7 +9,7 @@ const initialState: State = {
   awaiting: [],
 };
 
-type ColumnType = keyof State;
+export type ColumnType = keyof State;
 
 export const todosSlice = createSlice({
   name: "todos",
