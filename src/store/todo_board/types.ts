@@ -16,7 +16,7 @@ export type ColumnType = {
   meta: ColumnMetaType;
 };
 
-export type ColumnsState = {
+export type TodoBoardState = {
   completed: ColumnType;
   awaiting: ColumnType;
   [column: string]: ColumnType;

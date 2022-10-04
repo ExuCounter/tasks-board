@@ -11,22 +11,31 @@ const sizings = {
 };
 
 const variants = {
-  main: "bg-cyan-600 bordered text-slate-50",
+  main: {
+    default: "bg-cyan-600 bordered text-slate-50",
+    ghost: "text-cyan-600 bordered",
+  },
 };
 
 type ButtonRawProps = ButtonHTMLAttributes<HTMLButtonElement>;
-type ButtonCustomProps = { sizing?: Sizing; variant?: Variant; children: any };
+type ButtonCustomProps = {
+  sizing?: Sizing;
+  variant?: Variant;
+  ghost?: boolean;
+  children: any;
+};
 
 type ButtonProps = PropsWithChildren<ButtonRawProps & ButtonCustomProps>;
 
 export const Button = ({
   sizing = "md",
   variant = "main",
+  ghost = false,
   children,
   ...props
 }: ButtonProps) => {
   const sizingClassName = sizings[sizing];
-  const variantClassName = variants[variant];
+  const variantClassName = variants[variant][ghost ? "ghost" : "default"];
 
   return (
     <button

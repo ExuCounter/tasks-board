@@ -3,19 +3,20 @@ import { useAppDispatch, useAppSelector } from "store/index";
 import {
   removeAllTodos,
   selectTodos,
-  selectTodosColumnNames,
-} from "store/todos/slice";
+  fetchTodos,
+  onTodoDragEnd,
+} from "store/todo_board/reducers/todosReducer";
+import { selectColumnNames } from "store/todo_board/reducers/columnsReducer";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Button } from "components/shared/ui-kit/index";
 import { CreateColumnForm } from "components/pages/@todos/forms/CreateColumnForm";
 import { CreateTodoForm } from "components/pages/@todos/forms/CreateTodoForm";
-import { fetchTodos, todoDragEnd } from "store/todos/slice";
 import { TodoColumn } from "components/pages/@todos/TodoColumn";
 
 const TodosPage: NextPage = () => {
   const dispatch = useAppDispatch();
   const todos = useAppSelector(selectTodos);
-  const todosColumnNames = useAppSelector(selectTodosColumnNames);
+  const todoColumnNames = useAppSelector(selectColumnNames);
 
   return (
     <div className="px-8 text-xl">
@@ -37,7 +38,7 @@ const TodosPage: NextPage = () => {
         onDragEnd={(result) => {
           if (result.destination) {
             dispatch(
-              todoDragEnd({
+              onTodoDragEnd({
                 id: result.draggableId,
                 destination: result.destination,
                 source: result.source,
@@ -47,7 +48,7 @@ const TodosPage: NextPage = () => {
         }}
       >
         <div className="flex gap-4 mt-4">
-          {todosColumnNames.map((columnName, idx) => (
+          {todoColumnNames.map((columnName, idx) => (
             <TodoColumn {...todos[columnName]} name={columnName} key={idx} />
           ))}
         </div>

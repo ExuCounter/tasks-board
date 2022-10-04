@@ -6,7 +6,7 @@ import {
   requiredString,
   baseValidationSchema,
 } from "components/shared/utils/validate";
-import { addTodosColumn } from "store/todos/slice";
+import { addTodosColumn } from "store/todo_board/reducers/columnsReducer";
 
 type InitialValues = {
   title: string;
