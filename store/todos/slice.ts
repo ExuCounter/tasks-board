@@ -1,72 +1,133 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "store/index";
-import type { State, TodoType } from "store/todos/types";
-import { v4 as uuidv4 } from "uuid";
+import type { ColumnsState, TodoType } from "store/todos/types";
 
-const initialState: State = {
-  completed: [],
-  awaiting: [],
+const prepareColumn = ({
+  title,
+  todos = [],
+}: {
+  title: string;
+  todos?: TodoType[];
+}) => ({
+  title,
+  todos,
+});
+
+const prepareTodo = (todoMessage: string): TodoType => ({
+  id: nanoid(),
+  todo: todoMessage,
+});
+
+const initialState: ColumnsState = {
+  completed: prepareColumn({ title: "Completed todos" }),
+  awaiting: prepareColumn({ title: "Awaiting todos" }),
 };
 
-export type ColumnType = keyof State;
+export type ColumnType = keyof ColumnsState;
 
-export const todosSlice = createSlice({
+const todosSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    add: (state, action: PayloadAction<Pick<TodoType, "todo">>) => {
-      state.awaiting.unshift({ todo: action.payload.todo, id: uuidv4() });
+    addTodo: {
+      reducer: (state, action: PayloadAction<TodoType>) => {
+        state.awaiting.todos.unshift(action.payload);
+      },
+      prepare: (todo: TodoType["todo"]) => ({ payload: prepareTodo(todo) }),
     },
-    bulkAdd: (state, action: PayloadAction<Pick<TodoType, "todo">[]>) => {
-      state.awaiting.unshift(
-        ...action.payload.map((todo) => ({ ...todo, id: uuidv4() }))
-      );
+    bulkAddTodos: {
+      reducer: (state, action: PayloadAction<TodoType[]>) => {
+        state.awaiting.todos.unshift(...action.payload);
+      },
+      prepare: (todos: { todo: TodoType["todo"] }[]) => {
+        return {
+          payload: todos.map((todo) => prepareTodo(todo.todo)),
+        };
+      },
     },
-    removeAll: () => initialState,
-    remove: (state, action: PayloadAction<Pick<TodoType, "id">>) => {
+    removeAllTodos: (state) => {
+      Object.keys(state).forEach((column) => (state[column].todos = []));
+    },
+    removeTodo: (state, action: PayloadAction<Pick<TodoType, "id">>) => {
       for (const column in state) {
-        state[column as ColumnType] = state[column as ColumnType].filter(
+        state[column].todos = state[column].todos.filter(
           (todo) => todo.id !== action.payload.id
         );
       }
     },
-    addColumn: (state, action: PayloadAction<{ name: string }>) => ({
+    addTodosColumn: (state, action: PayloadAction<{ title: string }>) => ({
       ...state,
-      [action.payload.name]: [],
+      [action.payload.title]: prepareColumn({ title: action.payload.title }),
     }),
-    dragEnd: (
-      state,
-      action: PayloadAction<
-        Pick<TodoType, "id"> & {
-          destination: { droppableId: ColumnType; index: number };
-        } & {
-          source: { droppableId: ColumnType; index: number };
+    todoDragEnd: {
+      reducer: (
+        state,
+        action: PayloadAction<{
+          destinationIndex: number;
+          sourceColumnId: ColumnType;
+          destinationColumnId: ColumnType;
+          todoId: TodoType["id"];
+        }>
+      ) => {
+        const draggable = state[action.payload.sourceColumnId].todos.find(
+          (todo) => todo.id === action.payload.todoId
+        ) as TodoType;
+
+        const filteredSourceArray = state[
+          action.payload.sourceColumnId
+        ].todos.filter((todo) => todo.id !== action.payload.todoId);
+
+        if (
+          action.payload.sourceColumnId === action.payload.destinationColumnId
+        ) {
+          state[action.payload.sourceColumnId].todos = filteredSourceArray;
+          state[action.payload.sourceColumnId].todos.splice(
+            action.payload.destinationIndex,
+            0,
+            draggable
+          );
+        } else {
+          state[action.payload.sourceColumnId].todos = filteredSourceArray;
+          state[action.payload.destinationColumnId].todos.splice(
+            action.payload.destinationIndex,
+            0,
+            draggable
+          );
         }
-      >
-    ) => {
-      const sourceColumnId = action.payload.source.droppableId;
-      const destinationColumnId = action.payload.destination.droppableId;
-
-      const destinationIndex = action.payload.destination.index;
-
-      const draggable = state[sourceColumnId].find(
-        (todo) => todo.id === action.payload.id
-      ) as TodoType;
-
-      const filteredSourceArray = state[sourceColumnId].filter(
-        (todo) => todo.id !== action.payload.id
-      );
-
-      if (sourceColumnId === destinationColumnId) {
-        state[sourceColumnId] = filteredSourceArray;
-        state[sourceColumnId].splice(destinationIndex, 0, draggable);
-      } else {
-        state[sourceColumnId] = filteredSourceArray;
-        state[destinationColumnId].splice(destinationIndex, 0, draggable);
-      }
+      },
+      prepare: ({
+        destination,
+        source,
+        id,
+      }: {
+        destination: { droppableId: ColumnType; index: number };
+        source: { droppableId: ColumnType; index: number };
+        id: TodoType["id"];
+      }) => {
+        return {
+          payload: {
+            sourceColumnId: source.droppableId,
+            destinationColumnId: destination.droppableId,
+            destinationIndex: destination.index,
+            todoId: id,
+          },
+        };
+      },
     },
   },
 });
+
+export const {
+  addTodo,
+  removeTodo,
+  removeAllTodos,
+  bulkAddTodos,
+  addTodosColumn,
+  todoDragEnd,
+} = todosSlice.actions;
+
+export const todosSliceReducer = todosSlice.reducer;
+export const todosSliceName = todosSlice.name;
 
 export const selectTodos = (state: RootState) => state.todos;

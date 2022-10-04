@@ -3,9 +3,9 @@ export type TodoType = {
   todo: string;
 };
 
-type ColumnType = TodoType[];
+export type ColumnType = { title: string; todos: TodoType[] };
 
-export type State = {
+export type ColumnsState = {
   completed: ColumnType;
   awaiting: ColumnType;
   [column: string]: ColumnType;

@@ -1,147 +1,83 @@
 import type { NextPage } from "next";
 import { useAppDispatch, useAppSelector } from "store/index";
-import { selectTodos } from "store/todos/slice";
+import { removeAllTodos, selectTodos } from "store/todos/slice";
+import type { ColumnType } from "store/todos/types";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Formik, Form } from "formik";
-import { Button } from "components/ui-kit/index";
-import { Input } from "components/form/Input";
-import * as Yup from "yup";
+import { Button } from "components/shared/ui-kit/index";
 import { todosApi } from "store/todos/api";
 import classNames from "classnames";
 import { TodoType } from "store/todos/types";
+import { CreateColumnForm } from "components/pages/@todos/forms/CreateColumnForm";
+import { CreateTodoForm } from "components/pages/@todos/forms/CreateTodoForm";
+import { bulkAddTodos, removeTodo, todoDragEnd } from "store/todos/slice";
 
-type InitialValues = {
-  todo: string;
-};
-
-const CreateTodoSchema = Yup.object().shape({
-  todo: Yup.string()
-    .min(3, "too short todo!")
-    .max(200, "too long todo!")
-    .required("can't be blank!"),
-});
-
-const CreateTodoForm = () => {
+const Todo = ({
+  todo,
+  isDragging,
+}: {
+  todo: TodoType;
+  isDragging: boolean;
+}) => {
   const dispatch = useAppDispatch();
 
-  const initialValues: InitialValues = {
-    todo: "",
-  };
-
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={CreateTodoSchema}
-      onSubmit={(values, { resetForm }) => {
-        dispatch({ type: "todos/add", payload: { todo: values.todo } });
-        resetForm();
-      }}
+    <div
+      className={classNames(
+        "flex justify-between items-center mb-4 bg-white transition-colors",
+        { "bg-cyan-50": isDragging }
+      )}
     >
-      {() => {
-        return (
-          <Form>
-            <div className="flex">
-              <div className="flex flex-col">
-                <Input name="todo" placeholder="New todo description" />
-              </div>
-              <div>
-                <Button>add</Button>
-              </div>
-            </div>
-          </Form>
-        );
-      }}
-    </Formik>
+      <div className="px-3">{todo.todo}</div>
+      <Button onClick={() => dispatch(removeTodo({ id: todo.id }))}>
+        Remove
+      </Button>
+    </div>
   );
 };
 
-const CreateColumnSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(3, "too short column name!")
-    .max(15, "too long column name!")
-    .required("can't be blank!"),
-});
-
-const CreateColumnForm = () => {
-  const dispatch = useAppDispatch();
-
-  const initialValues: { name: string } = {
-    name: "",
-  };
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={CreateColumnSchema}
-      onSubmit={(values, { resetForm }) => {
-        dispatch({ type: "todos/addColumn", payload: { name: values.name } });
-        resetForm();
-      }}
-    >
-      {() => {
-        return (
-          <Form>
-            <div className="flex">
-              <div className="flex flex-col">
-                <Input name="name" placeholder="New column name" />
-              </div>
-              <div>
-                <Button>add</Button>
-              </div>
-            </div>
-          </Form>
-        );
-      }}
-    </Formik>
-  );
-};
-
-const TodoColumn = ({ name, todos }: { name: string; todos: TodoType[] }) => {
-  const dispatch = useAppDispatch();
-
+const TodoColumn = ({ title, type, todos }: ColumnType & { type: string }) => {
   return (
     <div className="flex flex-col w-[100%] bg-gray-100">
-      <div className="py-4 px-4">{`${name} (${todos.length})`}</div>
-      <Droppable droppableId={name}>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="m-2"
-          >
-            {todos.map((todo, idx) => (
-              <Draggable draggableId={todo.id} key={todo.id} index={idx}>
-                {(provided, snapshot) => {
-                  return (
-                    <div
-                      key={todo.id}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={classNames(
-                        "flex justify-between items-center mb-4 bg-white transition-colors",
-                        { "bg-cyan-50": snapshot.isDragging }
-                      )}
-                    >
-                      <div className="px-3">{todo.todo}</div>
-                      <Button
-                        onClick={() =>
-                          dispatch({
-                            type: "todos/remove",
-                            payload: { id: todo.id },
-                          })
-                        }
+      <div className="py-4 px-4">{`${title} (${todos.length})`}</div>
+      <Droppable droppableId={type}>
+        {(provided, snapshot) => {
+          const isSameColumn =
+            snapshot.draggingOverWith &&
+            todos.map((todo) => todo.id).includes(snapshot.draggingOverWith);
+
+          const isDraggingOver = snapshot.isDraggingOver && !isSameColumn;
+
+          return (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={classNames(
+                "m-2 overflow-y-scroll p-4 transition-all h-[80vh]",
+                {
+                  "bg-fuchsia-50": isDraggingOver,
+                }
+              )}
+            >
+              {todos.map((todo, idx) => (
+                <Draggable draggableId={todo.id} key={todo.id} index={idx}>
+                  {(provided, snapshot) => {
+                    return (
+                      <div
+                        key={todo.id}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
                       >
-                        Remove
-                      </Button>
-                    </div>
-                  );
-                }}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
+                        <Todo todo={todo} isDragging={snapshot.isDragging} />
+                      </div>
+                    );
+                  }}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          );
+        }}
       </Droppable>
     </div>
   );
@@ -155,10 +91,7 @@ const Root: NextPage = () => {
     const { data } = await dispatch(todosApi.endpoints.getTodos.initiate(null));
 
     if (data) {
-      dispatch({
-        type: "todos/bulkAdd",
-        payload: data,
-      });
+      dispatch(bulkAddTodos(data));
     }
   };
 
@@ -173,7 +106,7 @@ const Root: NextPage = () => {
           <Button onClick={() => fetchTodos()} className="mr-5">
             Fetch random todos
           </Button>
-          <Button onClick={() => dispatch({ type: "todos/removeAll" })}>
+          <Button onClick={() => dispatch(removeAllTodos())}>
             Remove all todos
           </Button>
         </div>
@@ -181,20 +114,19 @@ const Root: NextPage = () => {
       <DragDropContext
         onDragEnd={(result) => {
           if (result.destination) {
-            dispatch({
-              type: "todos/dragEnd",
-              payload: {
+            dispatch(
+              todoDragEnd({
                 id: result.draggableId,
                 destination: result.destination,
                 source: result.source,
-              },
-            });
+              })
+            );
           }
         }}
       >
         <div className="flex gap-4 mt-4">
-          {Object.keys(todos).map((column, idx) => (
-            <TodoColumn name={column} todos={todos[column]} key={idx} />
+          {Object.keys(todos).map((type, idx) => (
+            <TodoColumn {...todos[type]} type={type} key={idx} />
           ))}
         </div>
       </DragDropContext>
