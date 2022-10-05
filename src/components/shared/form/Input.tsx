@@ -1,7 +1,7 @@
 import {
   Input as InputComponent,
   InputProps as InputComponentProps,
-} from "components/ui-kit/index";
+} from "components/shared/ui-kit/index";
 import { useField, FieldAttributes } from "formik";
 
 export const Input = ({
