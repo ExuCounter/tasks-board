@@ -1,7 +1,8 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "store/index";
+import type { RootState, AppDispatch } from "store/index";
 import type { ColumnsState, TodoType } from "store/todos/types";
+import { todosApi } from "store/todos/api";
 
 const prepareColumn = ({
   title,
@@ -129,5 +130,21 @@ export const {
 
 export const todosSliceReducer = todosSlice.reducer;
 export const todosSliceName = todosSlice.name;
+
+export const fetchTodos = () => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const { data } = await dispatch(
+        todosApi.endpoints.getTodos.initiate(null)
+      );
+
+      if (data) {
+        dispatch(bulkAddTodos(data));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+};
 
 export const selectTodos = (state: RootState) => state.todos;
