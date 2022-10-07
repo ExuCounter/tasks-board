@@ -31,7 +31,12 @@ export const Button = ({
   return (
     <button
       {...props}
-      className={classNames(sizingClassName, variantClassName, props.className)}
+      className={classNames(
+        sizingClassName,
+        variantClassName,
+        "rounded-md",
+        props.className
+      )}
     >
       {children}
     </button>

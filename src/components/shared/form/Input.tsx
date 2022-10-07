@@ -2,6 +2,7 @@ import {
   Input as InputComponent,
   InputProps as InputComponentProps,
 } from "components/shared/ui-kit/index";
+import { Text } from "components/shared/ui-kit/index";
 import { useField, FieldAttributes } from "formik";
 
 export const Input = ({
@@ -14,7 +15,9 @@ export const Input = ({
     <div className="mb-3">
       <InputComponent {...field} {...props} />
       {meta.touched && meta.error ? (
-        <div className="text-red-500 text-sm mt-1">{meta.error}</div>
+        <Text className="text-red-500 mt-1" fontSize="sm">
+          {meta.error}
+        </Text>
       ) : null}
     </div>
   );
