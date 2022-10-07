@@ -30,12 +30,11 @@ export const CreateColumnForm = () => {
       initialValues={initialValues}
       validationSchema={schema}
       onSubmit={(values, { resetForm }) => {
-        console.log(values);
         dispatch(addTodosColumn({ title: values.title }));
         resetForm();
       }}
     >
-      {(values) => {
+      {() => {
         return (
           <Form>
             <div className="flex">

@@ -1,9 +1,20 @@
 export type TodoType = {
   id: string;
-  todo: string;
+  description: string;
 };
 
-export type ColumnType = { title: string; todos: TodoType[] };
+type ColumnMetaType = {
+  isLoading?: boolean;
+  policy: {
+    removable: boolean;
+  };
+};
+
+export type ColumnType = {
+  title: string;
+  todos: TodoType[];
+  meta: ColumnMetaType;
+};
 
 export type ColumnsState = {
   completed: ColumnType;

@@ -9,18 +9,20 @@ import {
 import { addTodo } from "store/todos/slice";
 
 type InitialValues = {
-  todo: string;
+  description: string;
 };
 
 const schema = baseValidationSchema.shape({
-  todo: requiredString.min(3, "too short todo!").max(200, "too long todo!"),
+  description: requiredString
+    .min(3, "too short todo!")
+    .max(200, "too long todo!"),
 });
 
 export const CreateTodoForm = () => {
   const dispatch = useAppDispatch();
 
   const initialValues: InitialValues = {
-    todo: "",
+    description: "",
   };
 
   return (
@@ -28,7 +30,7 @@ export const CreateTodoForm = () => {
       initialValues={initialValues}
       validationSchema={schema}
       onSubmit={(values, { resetForm }) => {
-        dispatch(addTodo(values.todo));
+        dispatch(addTodo(values.description));
         resetForm();
       }}
     >
@@ -37,7 +39,7 @@ export const CreateTodoForm = () => {
           <Form>
             <div className="flex">
               <div className="flex flex-col">
-                <Input name="todo" placeholder="New todo description" />
+                <Input name="description" placeholder="New todo description" />
               </div>
               <div>
                 <Button>add</Button>
