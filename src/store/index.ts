@@ -1,13 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
-import { todosSliceReducer, todosSliceName } from "store/todos/slice";
-import { todosApi } from "store/todos/api";
+import {
+  todoBoardReducer,
+  todoBoardReducerName,
+} from "store/todo_board/reducers";
+import { todoBoardApi } from "store/todo_board/api";
 
 export const store = configureStore({
   reducer: {
-    [todosSliceName]: todosSliceReducer,
-    [todosApi.reducerPath]: todosApi.reducer,
+    [todoBoardReducerName]: todoBoardReducer,
+    [todoBoardApi.reducerPath]: todoBoardApi.reducer,
   },
 });
 

@@ -1,12 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Data = {
+export type Data = {
   todos: {
     id: string;
     todo: string;
-    completed: boolean;
-    userId: number;
   };
 };
 
@@ -15,7 +13,9 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "GET") {
-    const result = await fetch("https://dummyjson.com/todos");
+    const result = await fetch(
+      `https://dummyjson.com/todos?skip=${req.query.skip}&limit=${req.query.limit}`
+    );
     const data = await result.json();
     const todos = data?.todos;
 

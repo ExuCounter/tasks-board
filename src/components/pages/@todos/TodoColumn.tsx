@@ -1,8 +1,8 @@
-import type { ColumnType } from "store/todos/types";
+import type { ColumnType } from "store/todo_board/types";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { Todo } from "components/pages/@todos/Todo";
 import { Spinner, Button } from "components/shared/ui-kit/index";
-import { removeTodosColumn } from "store/todos/slice";
+import { removeTodosColumn } from "store/todo_board/reducers/columnsReducer";
 import classNames from "classnames";
 import { useAppDispatch } from "store";
 
@@ -50,13 +50,8 @@ export const TodoColumn = ({
                 }
               )}
             >
-              {meta.isLoading && (
-                <div className="flex justify-center">
-                  <Spinner />
-                </div>
-              )}
-              {!meta.isLoading &&
-                todos.map((todo, idx) => (
+              <Spinner visible={meta.isLoading}>
+                {todos.map((todo, idx) => (
                   <Draggable draggableId={todo.id} key={todo.id} index={idx}>
                     {(provided, snapshot) => {
                       return (
@@ -72,6 +67,7 @@ export const TodoColumn = ({
                     }}
                   </Draggable>
                 ))}
+              </Spinner>
               {provided.placeholder}
             </div>
           );
