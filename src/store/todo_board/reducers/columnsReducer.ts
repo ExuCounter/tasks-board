@@ -1,22 +1,8 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { TodoBoardState, ColumnType } from "store/todo_board/types";
+import type { TodoBoardState } from "store/todo_board/types";
 import type { RootState } from "store/index";
-import { getActionName } from "store/todo_board/reducers/shared";
-
-const prepareColumn = ({
-  title,
-  todos = [],
-  meta,
-}: Pick<ColumnType, "title"> & Partial<Pick<ColumnType, "todos" | "meta">>) => {
-  const defaultMeta = { isLoading: false, policy: { removable: true } };
-
-  return {
-    title,
-    todos,
-    meta: { ...defaultMeta, ...meta },
-  };
-};
+import { getActionName, prepareColumn } from "store/todo_board/reducers/shared";
 
 export const setColumnLoading = createAction<{
   columnName: keyof TodoBoardState;

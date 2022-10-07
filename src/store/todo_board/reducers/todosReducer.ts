@@ -104,6 +104,7 @@ export const fetchTodos = () => {
 
       dispatch(setColumnLoading({ columnName: "awaiting", loading: false }));
     } catch (e) {
+      dispatch(setColumnLoading({ columnName: "awaiting", loading: false }));
       console.log(e);
     }
   };
