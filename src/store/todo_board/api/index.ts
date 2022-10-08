@@ -1,15 +1,29 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { Data } from "pages/api/todos";
-import { REDUCER_NAME } from "store/todo_board/reducers/shared";
+import { REDUCER_NAME } from "store/todo_board/utils";
 import { HYDRATE } from "next-redux-wrapper";
 
-const isBrowser = process.browser
+const isBrowser = process.browser;
+const isProduction = process.env.NODE_ENV === "production";
+const vercelURL = process.env.VERCEL_URL;
 
-const BASE_URL = `${isBrowser ? "" : `http://localhost:3000`}/api`
+const getBaseUrl = () => {
+  if (isProduction) {
+    if (vercelURL) {
+      return `https://${vercelURL}/api`;
+    }
+  }
+
+  if (isBrowser) {
+    return "/api";
+  }
+
+  return `http://localhost:3000/api`;
+};
 
 export const todoBoardApi = createApi({
   reducerPath: `${REDUCER_NAME}Api`,
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: getBaseUrl() }),
   tagTypes: [],
   endpoints: (builder) => ({
     getTodos: builder.query<Data["todos"][], { page: number; limit: number }>({

@@ -1,10 +1,10 @@
+import { Reducer } from "@reduxjs/toolkit";
+import reduceReducers from "reduce-reducers";
 import type { TodoBoardState } from "store/todo_board/types";
 import { createColumnsReducer } from "store/todo_board/reducers/columnsReducer";
 import { createTodosReducer } from "store/todo_board/reducers/todosReducer";
 import { createApiReducer } from "store/todo_board/reducers/apiReducer";
-import { REDUCER_NAME, prepareColumn } from "store/todo_board/reducers/shared";
-import { Reducer } from "@reduxjs/toolkit";
-import reduceReducers from "reduce-reducers";
+import { REDUCER_NAME, prepareColumn } from "store/todo_board/utils";
 
 const initialState: TodoBoardState = {
   columns: {

@@ -1,8 +1,12 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
+import { getActionName, prepareColumn } from "store/todo_board/utils";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { TodoBoardState } from "store/todo_board/types";
 import type { RootState } from "store/index";
-import { getActionName, prepareColumn } from "store/todo_board/reducers/shared";
+
+const createActions = (actions: ReturnType<typeof createAction>[]) => {
+  return actions;
+};
 
 export const setColumnLoading = createAction<{
   columnName: keyof TodoBoardState["columns"];

@@ -4,7 +4,7 @@ import type { AppDispatch, AppGetState } from "store/index";
 import type { TodoBoardState, TodoType } from "store/todo_board/types";
 import { todoBoardApi } from "store/todo_board/api";
 import { setColumnLoading } from "store/todo_board/reducers/columnsReducer";
-import { getActionName } from "store/todo_board/reducers/shared";
+import { getActionName } from "store/todo_board/utils";
 import { updateTodosQueryVariables } from "store/todo_board/reducers/apiReducer";
 
 const prepareTodo = (description: string): TodoType => ({
