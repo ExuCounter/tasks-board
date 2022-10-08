@@ -28,7 +28,11 @@ const TodosPage: NextPage = () => {
           <CreateColumnForm />
         </div>
         <div className="flex">
-          <Button onClick={() => dispatch(fetchTodos())} className="mr-5">
+          <Button
+            onClick={() => dispatch(fetchTodos())}
+            className="mr-5"
+            disabled={columns.awaiting.meta.isLoading}
+          >
             Fetch random todos
           </Button>
           <Button onClick={() => dispatch(removeAllTodos())}>

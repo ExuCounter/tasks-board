@@ -25,7 +25,7 @@ export type TodoBoardState = {
   api: {
     todos: {
       page: number;
-      limit: 10;
+      limit: number;
     };
   };
 };

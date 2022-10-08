@@ -97,16 +97,18 @@ export const fetchTodos = () => {
   return async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const page = state.todo_board.api.todos.page;
+    const limit = state.todo_board.api.todos.limit;
 
     try {
       dispatch(setColumnLoading({ columnName: "awaiting", loading: true }));
 
       // Atrificial delay
-      await timeout(1000);
+      // await timeout(1000);
 
       const { data } = await dispatch(
         todoBoardApi.endpoints.getTodos.initiate({
           page,
+          limit,
         })
       );
 

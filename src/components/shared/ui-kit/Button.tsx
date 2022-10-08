@@ -11,10 +11,7 @@ const sizings = {
 };
 
 const variants = {
-  main: {
-    default: "bg-cyan-600 bordered text-slate-50",
-    ghost: "text-cyan-600 bordered",
-  },
+  main: "bg-cyan-600 text-slate-50",
 };
 
 type ButtonRawProps = ButtonHTMLAttributes<HTMLButtonElement>;
@@ -31,19 +28,24 @@ export const Button = ({
   sizing = "md",
   variant = "main",
   ghost = false,
+  disabled,
   children,
   ...props
 }: ButtonProps) => {
   const sizingClassName = sizings[sizing];
-  const variantClassName = variants[variant][ghost ? "ghost" : "default"];
+  const variantClassName = variants[variant];
 
   return (
     <button
       {...props}
+      disabled={disabled}
       className={classNames(
         sizingClassName,
         variantClassName,
         "rounded-md",
+        "bordered",
+        { "bg-gray-400 text-white": disabled },
+        { "text-cyan-600 bg-transparent": ghost },
         props.className
       )}
     >

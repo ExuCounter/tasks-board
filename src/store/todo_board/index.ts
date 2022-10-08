@@ -1,4 +1,4 @@
-import type { TodoBoardState, ColumnType } from "store/todo_board/types";
+import type { TodoBoardState } from "store/todo_board/types";
 import { createColumnsReducer } from "store/todo_board/reducers/columnsReducer";
 import { createTodosReducer } from "store/todo_board/reducers/todosReducer";
 import { createApiReducer } from "store/todo_board/reducers/apiReducer";
@@ -20,7 +20,7 @@ const initialState: TodoBoardState = {
   api: {
     todos: {
       page: 1,
-      limit: 10,
+      limit: 50,
     },
   },
 };

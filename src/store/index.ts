@@ -1,10 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
-import {
-  todoBoardReducer,
-  todoBoardReducerName,
-} from "store/todo_board/reducers";
+import { todoBoardReducer, todoBoardReducerName } from "store/todo_board";
 import { todoBoardApi } from "store/todo_board/api";
 
 export const store = configureStore({
