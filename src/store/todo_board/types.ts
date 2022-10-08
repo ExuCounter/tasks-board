@@ -17,7 +17,15 @@ export type ColumnType = {
 };
 
 export type TodoBoardState = {
-  completed: ColumnType;
-  awaiting: ColumnType;
-  [column: string]: ColumnType;
+  columns: {
+    completed: ColumnType;
+    awaiting: ColumnType;
+    [column: string]: ColumnType;
+  };
+  api: {
+    todos: {
+      page: number;
+      limit: 10;
+    };
+  };
 };

@@ -9,7 +9,8 @@ export const todoBoardApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   endpoints: (builder) => ({
     getTodos: builder.query<Data["todos"][], { page: number }>({
-      query: ({ page }) => `todos?skip=${page}&limit=${PAGE_LIMIT}`,
+      query: ({ page }) =>
+        `todos?skip=${page * PAGE_LIMIT}&limit=${PAGE_LIMIT}`,
     }),
   }),
 });

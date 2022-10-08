@@ -5,7 +5,7 @@ import type { RootState } from "store/index";
 import { getActionName, prepareColumn } from "store/todo_board/reducers/shared";
 
 export const setColumnLoading = createAction<{
-  columnName: keyof TodoBoardState;
+  columnName: keyof TodoBoardState["columns"];
   loading: boolean;
 }>(getActionName("setColumnLoading"));
 
@@ -21,25 +21,25 @@ export const createColumnsReducer = (state: TodoBoardState) =>
   createReducer(state, (builder) => {
     builder
       .addCase(setColumnLoading, (state, action) => {
-        state[action.payload.columnName].meta.isLoading =
+        state.columns[action.payload.columnName].meta.isLoading =
           action.payload.loading;
       })
       .addCase(
         addTodosColumn,
-        (state, action: PayloadAction<{ title: string }>) => ({
-          ...state,
-          [action.payload.title]: prepareColumn({
+        (state, action: PayloadAction<{ title: string }>) => {
+          state.columns[action.payload.title] = prepareColumn({
             title: action.payload.title,
-          }),
-        })
+          });
+        }
       )
       .addCase(
         removeTodosColumn,
         (state, action: PayloadAction<{ title: string }>) => {
-          delete state[action.payload.title];
+          delete state.columns[action.payload.title];
         }
       );
   });
 
-export const selectColumnNames = (state: RootState) =>
-  Object.keys(state.todo_board);
+export const selectColumns = (state: RootState) => state.todo_board.columns;
+export const selectColumnsNames = (state: RootState) =>
+  Object.keys(state.todo_board.columns);
