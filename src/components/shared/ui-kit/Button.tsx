@@ -2,7 +2,7 @@ import { PropsWithChildren, ButtonHTMLAttributes } from "react";
 import classNames from "classnames";
 
 type Sizing = "sm" | "md" | "lg";
-type Variant = "main";
+type Variant = keyof typeof variants;
 
 const sizings = {
   sm: "py-1 px-3",
@@ -12,6 +12,7 @@ const sizings = {
 
 const variants = {
   main: "bg-cyan-600 text-slate-50",
+  danger: "bg-red-400 text-white",
 };
 
 type ButtonRawProps = ButtonHTMLAttributes<HTMLButtonElement>;

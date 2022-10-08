@@ -21,9 +21,12 @@ export const Todo = ({
           { "bg-cyan-50 border-2 border-slate-200": isDragging }
         )}
       >
-        <Text className="px-3">{todo.description}</Text>
+        <Text className="px-3" fontSize="xs">
+          {todo.description}
+        </Text>
         <Button
           onClick={() => dispatch(removeTodo({ id: todo.id }))}
+          variant="danger"
           sizing="sm"
           ghost
         >

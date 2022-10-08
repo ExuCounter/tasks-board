@@ -23,7 +23,10 @@ export const TodoColumn = ({
       >
         <div>{`${title} (${todos.length})`}</div>
         {isRemovableColumn && (
-          <Button onClick={() => dispatch(removeTodosColumn({ title }))}>
+          <Button
+            onClick={() => dispatch(removeTodosColumn({ title }))}
+            variant="danger"
+          >
             X
           </Button>
         )}
@@ -34,20 +37,17 @@ export const TodoColumn = ({
             snapshot.draggingOverWith &&
             todos.map((todo) => todo.id).includes(snapshot.draggingOverWith);
 
-          const [isDraggingOver, draggingOverClassNames] = [
-            snapshot.isDraggingOver && !isSameColumn,
-            "m-2 overflow-y-scroll p-4 transition-all h-[80vh]",
-          ];
+          // const [isDraggingOver, draggingOverClassNames] = [
+          //   snapshot.isDraggingOver && !isSameColumn,
+          //   "m-2 overflow-y-scroll p-4 transition-all h-[80vh]",
+          // ];
 
           return (
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
               className={classNames(
-                "m-2 overflow-y-scroll p-4 transition-all h-[80vh]",
-                {
-                  [draggingOverClassNames]: isDraggingOver,
-                }
+                "m-2 overflow-y-scroll p-4 transition-all h-[80vh]"
               )}
             >
               <Spinner visible={meta.isLoading}>

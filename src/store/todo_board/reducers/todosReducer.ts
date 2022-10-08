@@ -3,7 +3,6 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { AppDispatch, AppGetState } from "store/index";
 import type { TodoBoardState, TodoType } from "store/todo_board/types";
 import { todoBoardApi } from "store/todo_board/api";
-import { timeout } from "components/shared/utils/timeout";
 import { setColumnLoading } from "store/todo_board/reducers/columnsReducer";
 import { getActionName } from "store/todo_board/reducers/shared";
 import { updateTodosQueryVariables } from "store/todo_board/reducers/apiReducer";
@@ -51,7 +50,9 @@ export const createTodosReducer = (state: TodoBoardState) =>
         state.columns.awaiting.todos.unshift(...action.payload);
       })
       .addCase(removeAllTodos, (state) => {
-        Object.keys(state).forEach(
+        state.api.todos.page = 1;
+
+        Object.keys(state.columns).forEach(
           (column) => (state.columns[column].todos = [])
         );
       })
@@ -101,9 +102,6 @@ export const fetchTodos = () => {
 
     try {
       dispatch(setColumnLoading({ columnName: "awaiting", loading: true }));
-
-      // Atrificial delay
-      // await timeout(1000);
 
       const { data } = await dispatch(
         todoBoardApi.endpoints.getTodos.initiate({

@@ -8,7 +8,8 @@ export const updateTodosQueryVariables = createAction<{
 
 export const createApiReducer = (state: TodoBoardState) =>
   createReducer(state, (builder) => {
-    builder.addCase(updateTodosQueryVariables, (state, action) => {
-      state.api.todos.page = action.payload.page;
-    });
+    builder
+      .addCase(updateTodosQueryVariables, (state, action) => {
+        state.api.todos.page = action.payload.page;
+      })
   });
