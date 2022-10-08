@@ -15,9 +15,7 @@ export const Input = ({
     <div className="mb-3">
       <InputComponent {...field} {...props} />
       {meta.touched && meta.error ? (
-        <Text className="text-red-500 mt-1" fontSize="sm">
-          {meta.error}
-        </Text>
+        <Text className="text-red-500 mt-1">{meta.error}</Text>
       ) : null}
     </div>
   );

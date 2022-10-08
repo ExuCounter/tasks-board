@@ -20,7 +20,12 @@ export const Input = ({ sizing = "md", ...props }: InputProps) => {
   return (
     <input
       {...props}
-      className={classNames(sizingClassName, "border", props.className)}
+      className={classNames(
+        sizingClassName,
+        "border",
+        "rounded-md",
+        props.className
+      )}
     />
   );
 };

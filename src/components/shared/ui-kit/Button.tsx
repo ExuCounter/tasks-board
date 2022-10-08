@@ -44,6 +44,7 @@ export const Button = ({
         sizingClassName,
         variantClassName,
         "rounded-md",
+        "inline-block",
         "bordered",
         { "bg-gray-400 text-white": disabled },
         { "text-cyan-600 bg-transparent": ghost },

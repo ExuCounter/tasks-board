@@ -43,12 +43,12 @@ const TodosPage: NextPage = () => {
 
   return (
     <div className="text-xl px-8 max-w-[1320px] mx-[auto] h-[100vh]">
-      <div className="flex items-center justify-between h-[100px]">
+      <div className="flex justify-between h-[80px] py-5">
         <div className="flex gap-4">
           <CreateTodoForm />
           <CreateColumnForm />
         </div>
-        <div className="flex">
+        <div>
           <Button
             onClick={() => dispatch(fetchTodos())}
             className="mr-5"
