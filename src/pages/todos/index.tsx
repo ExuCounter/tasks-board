@@ -21,12 +21,20 @@ import { Button } from "components/shared/ui-kit/index";
 import { CreateColumnForm } from "components/pages/@todos/forms/CreateColumnForm";
 import { CreateTodoForm } from "components/pages/@todos/forms/CreateTodoForm";
 import { TodoColumn } from "components/pages/@todos/TodoColumn";
-import { getTodos, getRunningOperationPromises } from "store/todo_board/api";
+import {
+  getTodos,
+  getRunningOperationPromises,
+  prefetch,
+} from "store/todo_board/api";
+import { selectTodosQueryVariables } from "store/todo_board/reducers/apiReducer";
 
 const TodosPage: NextPage = () => {
   const dispatch = useAppDispatch();
   const columns = useAppSelector(selectColumns);
   const columnsNames = useAppSelector(selectColumnsNames);
+  const todosQueryVariables = useAppSelector(selectTodosQueryVariables);
+  const prefetchTodos = () =>
+    prefetch("getTodos", todosQueryVariables, { force: true });
 
   useEffect(() => {
     dispatch(fetchTodos());
@@ -44,6 +52,7 @@ const TodosPage: NextPage = () => {
           <Button
             onClick={() => dispatch(fetchTodos())}
             className="mr-5"
+            onMouseEnter={() => dispatch(prefetchTodos())}
             disabled={columns.awaiting.meta.isLoading}
           >
             Fetch random todos
@@ -94,7 +103,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
         })
       );
 
-      await Promise.all(getRunningOperationPromises())
+      await Promise.all(getRunningOperationPromises());
 
       return {
         props: {},

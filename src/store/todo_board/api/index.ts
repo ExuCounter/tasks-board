@@ -5,7 +5,7 @@ import { HYDRATE } from "next-redux-wrapper";
 
 const isBrowser = process.browser
 
-const BASE_URL = `${isBrowser ? "" : "http://localhost:3000"}/api`
+const BASE_URL = `${isBrowser ? "" : `http://localhost:3000`}/api`
 
 export const todoBoardApi = createApi({
   reducerPath: `${REDUCER_NAME}Api`,
@@ -25,7 +25,7 @@ export const todoBoardApi = createApi({
 
 export const {
   useGetTodosQuery,
-  util: { getRunningOperationPromises },
+  util: { getRunningOperationPromises, prefetch },
 } = todoBoardApi;
 
 export const { getTodos } = todoBoardApi.endpoints;

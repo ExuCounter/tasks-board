@@ -1,5 +1,6 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
-import type { TodoBoardState } from "store/todo_board/types";
+import type { TodoBoardState  } from "store/todo_board/types";
+import type {RootState} from 'store/index'
 import { getActionName } from "store/todo_board/reducers/shared";
 
 export const updateTodosQueryVariables = createAction<{
@@ -13,3 +14,6 @@ export const createApiReducer = (state: TodoBoardState) =>
         state.api.todos.page = action.payload.page;
       })
   });
+
+export const selectTodosQueryVariables = (state: RootState) =>
+state.todo_board.api.todos
