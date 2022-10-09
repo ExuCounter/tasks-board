@@ -5,3 +5,7 @@
 html {
   font-size: 11px;
 }
+
+:root {
+  --toastify-toast-min-height: 30px;
+}

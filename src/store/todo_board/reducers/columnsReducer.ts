@@ -4,10 +4,6 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { TodoBoardState } from "store/todo_board/types";
 import type { RootState } from "store/index";
 
-const createActions = (actions: ReturnType<typeof createAction>[]) => {
-  return actions;
-};
-
 export const setColumnLoading = createAction<{
   columnName: keyof TodoBoardState["columns"];
   loading: boolean;
@@ -31,9 +27,12 @@ export const createColumnsReducer = (state: TodoBoardState) =>
       .addCase(
         addTodosColumn,
         (state, action: PayloadAction<{ title: string }>) => {
-          state.columns[action.payload.title] = prepareColumn({
-            title: action.payload.title,
-          });
+          state.columns = {
+            [action.payload.title]: prepareColumn({
+              title: action.payload.title,
+            }),
+            ...state.columns,
+          };
         }
       )
       .addCase(

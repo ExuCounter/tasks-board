@@ -8,11 +8,21 @@ export const prepareColumn = ({
   meta,
   todos = [],
 }: Pick<ColumnType, "title"> & Partial<Pick<ColumnType, "todos" | "meta">>) => {
-  const defaultMeta = { isLoading: false, policy: { removable: true } };
+  const defaultMeta = {
+    isLoading: false,
+    policy: { removable: true, todoCompletable: true },
+  };
 
   return {
     title,
     todos,
-    meta: { ...defaultMeta, ...meta },
+    meta: {
+      ...defaultMeta,
+      ...meta,
+      policy: {
+        ...defaultMeta.policy,
+        ...meta?.policy,
+      },
+    },
   };
 };

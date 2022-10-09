@@ -8,13 +8,13 @@ import { REDUCER_NAME, prepareColumn } from "store/todo_board/utils";
 
 const initialState: TodoBoardState = {
   columns: {
-    completed: prepareColumn({
-      title: "Completed todos",
-      meta: { policy: { removable: false } },
-    }),
     awaiting: prepareColumn({
       title: "Awaiting todos",
       meta: { policy: { removable: false } },
+    }),
+    completed: prepareColumn({
+      title: "Completed todos",
+      meta: { policy: { removable: false, todoCompletable: false } },
     }),
   },
   api: {

@@ -34,6 +34,10 @@ export const removeTodo = createAction<Pick<TodoType, "id">>(
   getActionName("removeTodo")
 );
 
+export const completeTodo = createAction<Pick<TodoType, "id">>(
+  getActionName("completeTodo")
+);
+
 export const onTodoDragEnd = createAction<{
   destination: { droppableId: string; index: number };
   source: { droppableId: string; index: number };
@@ -55,6 +59,23 @@ export const createTodosReducer = (state: TodoBoardState) =>
         Object.keys(state.columns).forEach(
           (column) => (state.columns[column].todos = [])
         );
+      })
+      .addCase(completeTodo, (state, action) => {
+        const completedTodos: TodoType[] = [];
+
+        for (const column in state.columns) {
+          state.columns[column].todos = state.columns[column].todos.filter(
+            (todo) => {
+              if (todo.id === action.payload.id) {
+                completedTodos.push(todo);
+              }
+
+              return todo.id !== action.payload.id;
+            }
+          );
+        }
+
+        state.columns.completed.todos.unshift(...completedTodos);
       })
       .addCase(removeTodo, (state, action) => {
         for (const column in state.columns) {

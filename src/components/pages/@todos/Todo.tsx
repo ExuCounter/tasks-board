@@ -1,20 +1,28 @@
 import { useAppDispatch } from "store/index";
 import { Button, Text } from "components/shared/ui-kit/index";
-import { removeTodo } from "store/todo_board/reducers/todosReducer";
+import { XMarkIcon, CheckIcon } from "@heroicons/react/24/solid";
+import {
+  completeTodo,
+  removeTodo,
+} from "store/todo_board/reducers/todosReducer";
 import classNames from "classnames";
 import type { TodoType } from "store/todo_board/types";
 
 export const Todo = ({
   todo,
   isDragging,
+  completable = false,
 }: {
   todo: TodoType;
   isDragging: boolean;
+  completable?: boolean;
 }) => {
   const dispatch = useAppDispatch();
 
+  console.log(completable);
+
   return (
-    <div className="pb-5">
+    <div className="pb-5 select-none">
       <div
         className={classNames(
           "flex justify-between items-center bg-white transition-colors rounded-md p-3 border-transparent",
@@ -24,27 +32,26 @@ export const Todo = ({
         <Text className="px-3" fontSize="xs">
           {todo.description}
         </Text>
-        <Button
-          onClick={() => dispatch(removeTodo({ id: todo.id }))}
-          variant="danger"
-          sizing="sm"
-          ghost
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
+        <div className="flex">
+          {completable && (
+            <Button
+              onClick={() => dispatch(completeTodo({ id: todo.id }))}
+              variant="danger"
+              sizing="sm"
+              ghost
+            >
+              <CheckIcon width={16} height={16} />
+            </Button>
+          )}
+          <Button
+            onClick={() => dispatch(removeTodo({ id: todo.id }))}
+            variant="danger"
+            sizing="sm"
+            ghost
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </Button>
+            <XMarkIcon color="red" width={16} height={16} />
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { ColumnType } from "store/todo_board/types";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { Todo } from "components/pages/@todos/Todo";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 import { Spinner, Button, Text } from "components/shared/ui-kit/index";
 import { removeTodosColumn } from "store/todo_board/reducers/columnsReducer";
 import classNames from "classnames";
@@ -13,10 +14,14 @@ export const TodoColumn = ({
   meta,
 }: ColumnType & { name: string }) => {
   const isRemovableColumn = meta.policy.removable;
+  const isTodoCompletableColumn = meta.policy.todoCompletable;
   const dispatch = useAppDispatch();
 
   return (
-    <div className="flex flex-col w-[100%] bg-gray-100 rounded-md">
+    <div
+      className="flex flex-col w-[100%] bg-gray-100 rounded-md
+    min-w-[300px]"
+    >
       <div
         className="pt-4 px-7 flex justify-between content-center
       min-h-[45px]"
@@ -32,20 +37,7 @@ export const TodoColumn = ({
               onClick={() => dispatch(removeTodosColumn({ title }))}
               variant="danger"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <XCircleIcon width={16} height={16} />
             </Button>
           </div>
         )}
@@ -81,7 +73,11 @@ export const TodoColumn = ({
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          <Todo todo={todo} isDragging={snapshot.isDragging} />
+                          <Todo
+                            todo={todo}
+                            isDragging={snapshot.isDragging}
+                            completable={isTodoCompletableColumn}
+                          />
                         </div>
                       );
                     }}

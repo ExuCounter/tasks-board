@@ -42,7 +42,7 @@ const TodosPage: NextPage = () => {
   }, []);
 
   return (
-    <div className="text-xl px-8 max-w-[1320px] mx-[auto] h-[100vh]">
+    <div className="text-xl px-8 min-w-[900px] max-w-[1320px] mx-[auto] h-[100vh]">
       <div className="flex justify-between h-[80px] py-5">
         <div className="flex gap-4">
           <CreateTodoForm />
@@ -76,7 +76,7 @@ const TodosPage: NextPage = () => {
             }
           }}
         >
-          <div className="flex gap-4 height-[100%] pb-4">
+          <div className="flex gap-4 height-[100%] pb-4 overflow-x-scroll">
             {columnsNames.map((columnName, idx) => (
               <TodoColumn
                 {...columns[columnName]}

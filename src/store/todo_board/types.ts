@@ -6,7 +6,8 @@ export type TodoType = {
 type ColumnMetaType = {
   isLoading?: boolean;
   policy: {
-    removable: boolean;
+    removable?: boolean;
+    todoCompletable?: boolean;
   };
 };
 
